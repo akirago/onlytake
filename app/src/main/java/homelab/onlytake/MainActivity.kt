@@ -1,25 +1,29 @@
 package homelab.onlytake
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         val photoFile = File(
             outputDirectory,
             SimpleDateFormat(
-                FILENAME_FORMAT, Locale.US
+                FILENAME_FORMAT, Locale.JAPAN
             ).format(System.currentTimeMillis()) + ".jpg"
         )
 
@@ -83,10 +87,22 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val savedUri = Uri.fromFile(photoFile)
+                    val savedUri = FileProvider.getUriForFile(
+                        this@MainActivity,
+                        this@MainActivity.applicationContext.packageName.toString() + ".provider",
+                        photoFile
+                    )
                     val msg = "Photo capture succeeded: $savedUri"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
+                    val shareIntent = ShareCompat.IntentBuilder.from(this@MainActivity)
+                        .setText("Share png")
+                        .setType("image/png")
+                        .setStream(savedUri)
+                        .intent
+                        .setPackage("com.google.android.apps.docs")
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    startActivity(shareIntent)
                 }
             })
     }
@@ -117,9 +133,10 @@ class MainActivity : AppCompatActivity() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
+                    this, cameraSelector, preview, imageCapture
+                )
 
-            } catch(exc: Exception) {
+            } catch (exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
 
