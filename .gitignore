@@ -4,6 +4,7 @@ build/
 *.iml
 !.idea/runConfigurations/*
 .idea/*.xml
+.idea/*
 .idea/.name
 
 keystore
