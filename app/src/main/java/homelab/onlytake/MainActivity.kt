@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val imageCapture = imageCapture ?: return
 
         // Create time-stamped output file to hold the image
+        // TODO: Filename_format, Locale を SystemPreference を用いて設定、保存できるようにする。
         val photoFile = File(
             outputDirectory,
             SimpleDateFormat(
