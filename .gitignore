@@ -9,3 +9,4 @@ build/
 
 keystore
 app/release/
+private_key.pepk
