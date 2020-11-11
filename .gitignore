@@ -6,6 +6,7 @@ build/
 .idea/*.xml
 .idea/*
 .idea/.name
+.DS_Store
 
 keystore
 app/release/
