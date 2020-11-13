@@ -16,6 +16,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.preference.PreferenceManager
+import homelab.onlytake.settings.getFormat
+import homelab.onlytake.settings.getLocale
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -69,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         val photoFile = File(
             outputDirectory,
             SimpleDateFormat(
-                FILENAME_FORMAT, Locale.JAPAN
+                getFormat(), getLocale()
             ).format(System.currentTimeMillis()) + ".jpg"
         )
 
