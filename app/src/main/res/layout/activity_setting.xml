@@ -1,124 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:title="Settings"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/format_text"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="FORMAT_TYPE"
-            android:textColor="@color/black"
-            android:textSize="50px"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-        <RadioGroup
-            android:id="@+id/format_radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@+id/radio_button_1"
-            app:layout_constraintTop_toBottomOf="@id/format_text">
-
-            <RadioButton
-                android:id="@+id/format_radio_button_sec"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/format_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="2020-01-01-23-59-59" />
+                android:layout_height="wrap_content"
+                android:text="FORMAT_TYPE"
+                android:textColor="@color/black"
+                android:textSize="50px"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/format_radio_button_min"
+            <RadioGroup
+                android:id="@+id/format_radio_group"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="2020-01-01-23-59" />
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/radio_button_1"
+                app:layout_constraintTop_toBottomOf="@id/format_text">
 
-            <RadioButton
-                android:id="@+id/format_radio_button_hour"
+                <RadioButton
+                    android:id="@+id/format_radio_button_sec"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="2020-12-31-23-59-59" />
+
+                <RadioButton
+                    android:id="@+id/format_radio_button_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="2020-12-31-23-59" />
+
+                <RadioButton
+                    android:id="@+id/format_radio_button_hour"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="2020-12-31-23" />
+            </RadioGroup>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/locale_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="2020-01-01-23" />
-        </RadioGroup>
+                android:layout_height="wrap_content"
+                android:text="TIME_ZONE"
+                android:textColor="@color/black"
+                android:textSize="50px"
+                app:layout_constraintTop_toBottomOf="@id/format_radio_group" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/locale_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TIME_ZONE"
-            android:textColor="@color/black"
-            android:textSize="50px"
-            app:layout_constraintTop_toBottomOf="@id/format_radio_group" />
-
-        <RadioGroup
-            android:id="@+id/locale_radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@+id/radio_button_1"
-            app:layout_constraintTop_toBottomOf="@id/locale_text">
-
-            <RadioButton
-                android:id="@+id/locale_radio_button_CANADA"
+            <RadioGroup
+                android:id="@+id/locale_radio_group"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="CANADA" />
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/radio_button_1"
+                app:layout_constraintTop_toBottomOf="@id/locale_text">
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_CHINA"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="CHINA" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_CANADA"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="CANADA" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_FRANCE"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="FRANCE" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_CHINA"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="CHINA" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_GERMAN"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="GERMAN" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_FRANCE"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="FRANCE" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_ITALY"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="ITALY" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_GERMAN"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="GERMAN" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_JAPAN"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="JAPAN" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_ITALY"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="ITALY" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_KOREA"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="KOREA" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_JAPAN"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="JAPAN" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_TAIWAN"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="TAIWAN" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_KOREA"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="KOREA" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_UK"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="UK" />
+                <RadioButton
+                    android:id="@+id/locale_radio_button_TAIWAN"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="TAIWAN" />
 
-            <RadioButton
-                android:id="@+id/locale_radio_button_US"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="US" />
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/locale_radio_button_UK"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="UK" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                <RadioButton
+                    android:id="@+id/locale_radio_button_US"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="US" />
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
