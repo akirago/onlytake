@@ -18,6 +18,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import homelab.onlytake.advertise.activateView
+import homelab.onlytake.advertise.initAdvertise
 import homelab.onlytake.settings.SettingActivity
 import homelab.onlytake.settings.getFormat
 import homelab.onlytake.settings.getLocale
@@ -44,6 +46,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        initAdvertise(this)
+        activateView(ad_view)
+
 
         // Request camera permissions
         if (allPermissionsGranted()) {

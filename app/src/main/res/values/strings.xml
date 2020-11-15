@@ -2,4 +2,5 @@
     <string name="app_name">OnlyTake</string>
     <string name="take_photo">take invoice</string>
     <string name="settings">settings</string>
+    <string name="save">save</string>
 </resources>
