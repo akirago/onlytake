@@ -11,6 +11,7 @@ const val FORMAT = "FORMAT"
 fun setLocale(locale: LOCALES) {
     editPreference()
         .putString(LOCALE, locale.key)
+        .commit()
 }
 
 fun getLocale() = getLocaleFromKey(getPreference().getString(LOCALE, LOCALES.US.key))
