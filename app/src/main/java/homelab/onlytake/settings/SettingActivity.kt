@@ -1,8 +1,10 @@
 package homelab.onlytake.settings
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import homelab.onlytake.BuildConfig
 import homelab.onlytake.R
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
@@ -10,12 +12,15 @@ import kotlinx.android.synthetic.main.activity_setting.*
 
 class SettingActivity : AppCompatActivity() {
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
         initAdvertise(this)
         activateView(ad_view_in_settings)
+
+        version_name.text = "app version: ${BuildConfig.VERSION_NAME}"
 
         when (getFormat()) {
             FILE_FORMATS.FILE_FORMAT_SEC -> format_radio_button_sec
