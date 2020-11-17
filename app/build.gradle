@@ -47,6 +47,8 @@ dependencies {
     // If you want to additionally use the CameraX Extensions library
     implementation "androidx.camera:camera-extensions:1.0.0-alpha18"
 
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:16.1.1'
+
     implementation "androidx.preference:preference-ktx:1.1.1"
 
     implementation 'com.google.android.material:material:1.2.1'
