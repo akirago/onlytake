@@ -18,6 +18,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
 import homelab.onlytake.settings.SettingActivity
@@ -91,6 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {   // Get a stable reference of the modifiable image capture use case
+        progress_bar.isVisible = true
         val imageCapture = imageCapture ?: return
 
         // Create time-stamped output file to hold the image
@@ -111,17 +114,19 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
+                    progress_bar.isGone = true
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    progress_bar.isGone = true
                     val savedUri = FileProvider.getUriForFile(
                         this@MainActivity,
                         this@MainActivity.applicationContext.packageName.toString() + ".provider",
                         photoFile
                     )
                     val msg = "Photo capture succeeded: $savedUri"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
                     val shareIntent = ShareCompat.IntentBuilder.from(this@MainActivity)
                         .setText("Share png")
