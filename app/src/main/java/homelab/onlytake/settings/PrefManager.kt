@@ -5,36 +5,50 @@ import androidx.preference.PreferenceManager
 import homelab.onlytake.CustomApplication
 
 
-const val LOCALE = "LOCALE"
+const val PREF_LOCALE = "LOCALE"
 fun setLocale(locale: LOCALES) {
     editPreference()
-        .putString(LOCALE, locale.key)
+        .putString(PREF_LOCALE, locale.key)
         .commit()
 }
 
-fun getLocale() = getLocaleFromKey(getPreference().getString(LOCALE, LOCALES.US.key))
+fun getLocale() = getLocaleFromKey(getPreference().getString(PREF_LOCALE, LOCALES.US.key))
 
 
-const val FORMAT = "FORMAT"
+const val PREF_FORMAT = "FORMAT"
 fun setFormat(format: FILE_FORMATS) {
     editPreference()
-        .putString(FORMAT, format.format)
+        .putString(PREF_FORMAT, format.format)
         .commit()
 }
 
 fun getFormat() =
-    getFileFormatsFromKey(getPreference().getString(FORMAT, FILE_FORMATS.FILE_FORMAT_SEC.format))
+    getFileFormatsFromKey(getPreference().getString(PREF_FORMAT, FILE_FORMATS.FILE_FORMAT_SEC.format))
 
-const val OCR = "OCR"
+const val PREF_OCR = "OCR"
 fun setOcrSetting(ocrSetting: OcrSetting) {
     editPreference()
-        .putString(OCR, ocrSetting.key)
+        .putString(PREF_OCR, ocrSetting.key)
         .commit()
 }
 
-fun getOcrSetting() = getOcrSettingFromKey(getPreference().getString(OCR, OcrSetting.NONE.key))
+
+fun getOcrSetting() = getOcrSettingFromKey(getPreference().getString(PREF_OCR, OcrSetting.NONE.key))
+
+const val PREF_PREFIX = "PREFIX"
+fun setPrefixSetting(prefix: String) = setPreferenceOfString(PREF_PREFIX, prefix)
+fun getPrefixSetting() = getPreference().getString(PREF_PREFIX, "")!!
+
+const val PREF_SUFFIX = "SUFFIX"
+fun setSuffixSetting(suffix: String) = setPreferenceOfString(PREF_SUFFIX, suffix)
+fun getSuffixSetting() = getPreference().getString(PREF_SUFFIX, "")!!
 
 
+fun setPreferenceOfString(key: String, value: String) {
+    editPreference()
+        .putString(key, value)
+        .commit()
+}
 
 
 fun editPreference(): SharedPreferences.Editor =

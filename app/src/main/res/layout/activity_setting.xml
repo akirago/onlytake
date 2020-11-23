@@ -71,30 +71,33 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_recognize_text"
                 android:layout_width="wrap_content"
-                android:text="text_recognized"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/format_radio_group"
+                android:text="text_recognized"
+                android:textColor="@color/black"
                 android:textSize="50px"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/format_radio_group" />
 
             <RadioGroup
                 android:id="@+id/text_recognize_radio_group"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/text_recognize_text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/text_recognize_text">
 
                 <RadioButton
                     android:id="@+id/text_radio_button_PREFIX"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="prefix" />
+
                 <RadioButton
                     android:id="@+id/text_radio_button_SUFFIX"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="suffix" />
+
                 <RadioButton
                     android:id="@+id/text_radio_button_NONE"
                     android:layout_width="match_parent"
@@ -104,81 +107,75 @@
             </RadioGroup>
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/locale_text"
+                android:id="@+id/text_recognize_explanation_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TIME_ZONE"
-                android:textColor="@color/black"
-                android:textSize="50px"
+                android:layout_marginTop="10dp"
+                android:text="if you use text recognized, the recognized number will be added to the start of end of file name if the recognized text has number"
                 app:layout_constraintTop_toBottomOf="@id/text_recognize_radio_group" />
 
-            <RadioGroup
-                android:id="@+id/locale_radio_group"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/prefix_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="add prefix  :"
+                android:textColor="@color/black"
+                android:textSize="50px"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_recognize_explanation_text" />
+
+            <EditText
+                android:id="@+id/prefix_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:hint="prefix"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="50px"
+                app:layout_constraintBottom_toBottomOf="@id/prefix_text"
+                app:layout_constraintStart_toEndOf="@id/prefix_text"
+                app:layout_constraintTop_toTopOf="@id/prefix_text" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/prefix_explanation_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/radio_button_1"
-                app:layout_constraintTop_toBottomOf="@id/locale_text">
+                android:layout_marginTop="10dp"
+                android:text="if you write prefix, this will be added to the start of file name"
+                app:layout_constraintTop_toBottomOf="@id/prefix_text" />
 
-                <RadioButton
-                    android:id="@+id/locale_radio_button_CANADA"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="CANADA" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/suffix_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="add suffix  :"
+                android:textColor="@color/black"
+                android:textSize="50px"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/prefix_explanation_text" />
 
-                <RadioButton
-                    android:id="@+id/locale_radio_button_CHINA"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="CHINA" />
+            <EditText
+                android:id="@+id/suffix_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:hint="suffix"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="50px"
+                app:layout_constraintBottom_toBottomOf="@id/suffix_text"
+                app:layout_constraintStart_toEndOf="@id/suffix_text"
+                app:layout_constraintTop_toTopOf="@id/suffix_text" />
 
-                <RadioButton
-                    android:id="@+id/locale_radio_button_FRANCE"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="FRANCE" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_GERMAN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="GERMAN" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_ITALY"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="ITALY" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_JAPAN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="JAPAN" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_KOREA"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="KOREA" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_TAIWAN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="TAIWAN" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_UK"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="UK" />
-
-                <RadioButton
-                    android:id="@+id/locale_radio_button_US"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="US" />
-            </RadioGroup>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="if you write suffix, this will be added to the end of file name"
+                app:layout_constraintTop_toBottomOf="@id/suffix_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -186,8 +183,8 @@
     <Button
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
-        android:layout_marginBottom="15dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:text="@string/save"
         app:layout_constraintBottom_toTopOf="@id/ad_view_in_settings"
         app:layout_constraintEnd_toEndOf="parent"

@@ -4,6 +4,8 @@ import homelab.onlytake.CustomApplication
 import homelab.onlytake.R
 import homelab.onlytake.settings.getFormat
 import homelab.onlytake.settings.getLocale
+import homelab.onlytake.settings.getPrefixSetting
+import homelab.onlytake.settings.getSuffixSetting
 import java.io.File
 import java.text.SimpleDateFormat
 
@@ -25,7 +27,10 @@ fun createFile() = File(
 
 fun createFilePath() = SimpleDateFormat(
     getFormat().format, getLocale().locale
-).format(System.currentTimeMillis()).toJpg()
+).format(System.currentTimeMillis()).addPrefix(getPrefixSetting()).addSuffix(getSuffixSetting()).toJpg()
+
+fun String.addSuffix(suffix: String): String = if (suffix.isEmpty()) this else "${this}_$suffix"
+fun String.addPrefix(prefix: String): String = if (prefix.isEmpty()) this else "${prefix}_$this"
 
 fun String.toJpg(): String = "$this.jpg"
 

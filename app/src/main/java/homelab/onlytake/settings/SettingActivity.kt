@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import homelab.onlytake.BuildConfig
 import homelab.onlytake.R
 import homelab.onlytake.advertise.activateView
@@ -34,18 +35,8 @@ class SettingActivity : AppCompatActivity() {
             OcrSetting.NONE -> text_radio_button_NONE
         }.isChecked = true
 
-        when (getLocale()) {
-            LOCALES.CANADA -> locale_radio_button_CANADA
-            LOCALES.CHINA -> locale_radio_button_CHINA
-            LOCALES.FRANCE -> locale_radio_button_FRANCE
-            LOCALES.GERMAN -> locale_radio_button_GERMAN
-            LOCALES.ITALY -> locale_radio_button_ITALY
-            LOCALES.JAPAN -> locale_radio_button_JAPAN
-            LOCALES.KOREA -> locale_radio_button_KOREA
-            LOCALES.TAIWAN -> locale_radio_button_TAIWAN
-            LOCALES.UK -> locale_radio_button_UK
-            LOCALES.US -> locale_radio_button_US
-        }.isChecked = true
+        prefix_edit_text.setText(getPrefixSetting())
+        suffix_edit_text.setText(getSuffixSetting())
 
         format_radio_group.setOnCheckedChangeListener { _, checkedId ->
             // Responds to child RadioButton checked/unchecked
@@ -64,19 +55,12 @@ class SettingActivity : AppCompatActivity() {
             }
         }
 
-        locale_radio_group.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                locale_radio_button_CANADA.id -> setLocale(LOCALES.CANADA)
-                locale_radio_button_CHINA.id -> setLocale(LOCALES.CHINA)
-                locale_radio_button_FRANCE.id -> setLocale(LOCALES.FRANCE)
-                locale_radio_button_GERMAN.id -> setLocale(LOCALES.GERMAN)
-                locale_radio_button_ITALY.id -> setLocale(LOCALES.ITALY)
-                locale_radio_button_JAPAN.id -> setLocale(LOCALES.JAPAN)
-                locale_radio_button_KOREA.id -> setLocale(LOCALES.KOREA)
-                locale_radio_button_TAIWAN.id -> setLocale(LOCALES.TAIWAN)
-                locale_radio_button_UK.id -> setLocale(LOCALES.UK)
-                locale_radio_button_US.id -> setLocale(LOCALES.US)
-            }
+        prefix_edit_text.doOnTextChanged { text, _, _, _ ->
+            setPrefixSetting(text.toString())
+        }
+
+        suffix_edit_text.doOnTextChanged { text, _, _, _ ->
+            setSuffixSetting(text.toString())
         }
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
