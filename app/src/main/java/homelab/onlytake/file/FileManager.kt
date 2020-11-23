@@ -29,7 +29,7 @@ fun createFilePath() = SimpleDateFormat(
 
 fun String.toJpg(): String = "$this.jpg"
 
-fun String.trimJpg(): String = substring(0, length - 5)
+fun String.trimJpg(): String = substring(0, length - 4)
 
 fun File.addPrefix(prefix: String): File {
     val file = File(getOutputDirectory(), "${prefix}_$name")
