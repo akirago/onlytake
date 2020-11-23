@@ -2,6 +2,7 @@ package homelab.onlytake.settings
 
 import homelab.onlytake.settings.FILE_FORMATS.*
 import homelab.onlytake.settings.LOCALES.*
+import homelab.onlytake.settings.OcrSetting.*
 import java.util.*
 
 
@@ -47,4 +48,18 @@ private val localeMap = mapOf(
     TAIWAN.key to TAIWAN,
     UK.key to UK,
     US.key to US,
+)
+
+enum class OcrSetting(val key: String) {
+    PREFIX("prefix"),
+    SUFFIX("suffix"),
+    NONE("none"),
+}
+
+fun getOcrSettingFromKey(key: String?): OcrSetting = ocrMap[key] ?: NONE
+
+private val ocrMap = mapOf(
+    PREFIX.key to PREFIX,
+    SUFFIX.key to SUFFIX,
+    NONE.key to NONE,
 )

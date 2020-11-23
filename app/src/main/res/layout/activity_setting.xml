@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/save_button"
         app:layout_constraintTop_toBottomOf="@id/my_toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,13 +69,48 @@
             </RadioGroup>
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_recognize_text"
+                android:layout_width="wrap_content"
+                android:text="text_recognized"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/format_radio_group"
+                android:textSize="50px"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <RadioGroup
+                android:id="@+id/text_recognize_radio_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/text_recognize_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <RadioButton
+                    android:id="@+id/text_radio_button_PREFIX"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="prefix" />
+                <RadioButton
+                    android:id="@+id/text_radio_button_SUFFIX"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="suffix" />
+                <RadioButton
+                    android:id="@+id/text_radio_button_NONE"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="none" />
+
+            </RadioGroup>
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/locale_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TIME_ZONE"
                 android:textColor="@color/black"
                 android:textSize="50px"
-                app:layout_constraintTop_toBottomOf="@id/format_radio_group" />
+                app:layout_constraintTop_toBottomOf="@id/text_recognize_radio_group" />
 
             <RadioGroup
                 android:id="@+id/locale_radio_group"

@@ -28,6 +28,12 @@ class SettingActivity : AppCompatActivity() {
             FILE_FORMATS.FILE_FORMAT_HOUR -> format_radio_button_hour
         }.isChecked = true
 
+        when (getOcrSetting()) {
+            OcrSetting.PREFIX -> text_radio_button_PREFIX
+            OcrSetting.SUFFIX -> text_radio_button_SUFFIX
+            OcrSetting.NONE -> text_radio_button_NONE
+        }.isChecked = true
+
         when (getLocale()) {
             LOCALES.CANADA -> locale_radio_button_CANADA
             LOCALES.CHINA -> locale_radio_button_CHINA
@@ -47,6 +53,14 @@ class SettingActivity : AppCompatActivity() {
                 format_radio_button_sec.id -> setFormat(FILE_FORMATS.FILE_FORMAT_SEC)
                 format_radio_button_min.id -> setFormat(FILE_FORMATS.FILE_FORMAT_MIN)
                 format_radio_button_hour.id -> setFormat(FILE_FORMATS.FILE_FORMAT_HOUR)
+            }
+        }
+
+        text_recognize_radio_group.setOnCheckedChangeListener { _, checkId ->
+            when (checkId) {
+                text_radio_button_PREFIX.id -> setOcrSetting(OcrSetting.PREFIX)
+                text_radio_button_SUFFIX.id -> setOcrSetting(OcrSetting.SUFFIX)
+                text_radio_button_NONE.id -> setOcrSetting(OcrSetting.NONE)
             }
         }
 

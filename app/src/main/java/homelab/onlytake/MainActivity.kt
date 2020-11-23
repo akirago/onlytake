@@ -25,7 +25,9 @@ import com.google.mlkit.vision.text.TextRecognition
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
 import homelab.onlytake.file.*
+import homelab.onlytake.settings.OcrSetting
 import homelab.onlytake.settings.SettingActivity
+import homelab.onlytake.settings.getOcrSetting
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
@@ -114,13 +116,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    progress_bar.isGone = true
-
                     val savedUri = FileProvider.getUriForFile(
                         this@MainActivity,
                         this@MainActivity.applicationContext.packageName.toString() + ".provider",
                         photoFile
                     )
+                    if (getOcrSetting() == OcrSetting.NONE) {
+                        shareGoogleDrive(photoFile)
+                        return
+                    }
                     val image: InputImage
                     try {
                         image = InputImage.fromFilePath(this@MainActivity, savedUri)
@@ -128,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                         Log.e("tag", e.message ?: "")
                         return
                     }
-                    val result = recognizer.process(image)
+                    recognizer.process(image)
                         .addOnSuccessListener { visionText ->
                             // Task completed successfully
                             var useText = ""
@@ -162,8 +166,12 @@ class MainActivity : AppCompatActivity() {
                             useText.forEach {
                                 if (it.isDigit()) result += it
                             }
-
-                            val file = photoFile.addSuffix(result)
+                            var file = photoFile
+                            when(getOcrSetting()) {
+                                OcrSetting.PREFIX -> file = photoFile.addPrefix(result)
+                                OcrSetting.SUFFIX -> file = photoFile.addSuffix(result)
+                                OcrSetting.NONE -> {}
+                            }
                             shareGoogleDrive(file)
                             Log.d("recog text useText", result)
                             // ...
@@ -180,6 +188,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shareGoogleDrive(file: File) {
+        progress_bar.isGone = true
+
         val savedUri = FileProvider.getUriForFile(
             this@MainActivity,
             this@MainActivity.applicationContext.packageName.toString() + ".provider",
