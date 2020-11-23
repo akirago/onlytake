@@ -20,14 +20,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
+import homelab.onlytake.file.*
 import homelab.onlytake.settings.SettingActivity
-import homelab.onlytake.settings.getFormat
-import homelab.onlytake.settings.getLocale
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-import java.text.SimpleDateFormat
+import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -40,9 +41,10 @@ class MainActivity : AppCompatActivity() {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
+    val recognizer = TextRecognition.getClient()
+
     private var imageCapture: ImageCapture? = null
 
-    private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,8 +68,6 @@ class MainActivity : AppCompatActivity() {
         camera_capture_button.setOnClickListener {
             takePhoto()
         }
-
-        outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -97,12 +97,7 @@ class MainActivity : AppCompatActivity() {
         val imageCapture = imageCapture ?: return
 
         // Create time-stamped output file to hold the image
-        val photoFile = File(
-            outputDirectory,
-            SimpleDateFormat(
-                getFormat().format, getLocale().locale
-            ).format(System.currentTimeMillis()) + ".jpg"
-        )
+        val photoFile = createFile()
 
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -120,25 +115,88 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     progress_bar.isGone = true
+
                     val savedUri = FileProvider.getUriForFile(
                         this@MainActivity,
                         this@MainActivity.applicationContext.packageName.toString() + ".provider",
                         photoFile
                     )
+                    val image: InputImage
+                    try {
+                        image = InputImage.fromFilePath(this@MainActivity, savedUri)
+                    } catch (e: IOException) {
+                        Log.e("tag", e.message ?: "")
+                        return
+                    }
+                    val result = recognizer.process(image)
+                        .addOnSuccessListener { visionText ->
+                            // Task completed successfully
+                            var useText = ""
+                            var height = 0
+                            for (block in visionText.textBlocks) {
+                                val blockText = block.text
+                                val blockCornerPoints = block.cornerPoints
+                                val blockFrame = block.boundingBox
+                                for (line in block.lines) {
+                                    val lineText = line.text
+                                    val lineCornerPoints = line.cornerPoints
+                                    val lineFrame = line.boundingBox
+                                    Log.d("recog text lineText", lineText)
+                                    if (height < lineFrame?.height() ?: 0) {
+                                        var curResult = ""
+                                        lineText.forEach {
+                                            if (it.isDigit()) curResult += it
+                                        }
+                                        if (curResult.isEmpty()) continue
+                                        height = lineFrame!!.height()
+                                        useText = lineText
+                                    }
+                                    for (element in line.elements) {
+                                        val elementText = element.text
+                                        val elementCornerPoints = element.cornerPoints
+                                        val elementFrame = element.boundingBox
+                                    }
+                                }
+                            }
+                            var result = ""
+                            useText.forEach {
+                                if (it.isDigit()) result += it
+                            }
+
+                            val file = photoFile.addSuffix(result)
+                            shareGoogleDrive(file)
+                            Log.d("recog text useText", result)
+                            // ...
+                        }
+                        .addOnFailureListener { e ->
+                            shareGoogleDrive(photoFile)
+                        }
+
                     val msg = "Photo capture succeeded: $savedUri"
 //                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
-                    val shareIntent = ShareCompat.IntentBuilder.from(this@MainActivity)
-                        .setText("Share png")
-                        .setType("image/png")
-                        .setStream(savedUri)
-                        .intent
-                        .setPackage("com.google.android.apps.docs")
-                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    startActivity(shareIntent)
                 }
             })
     }
+
+    private fun shareGoogleDrive(file: File) {
+        val savedUri = FileProvider.getUriForFile(
+            this@MainActivity,
+            this@MainActivity.applicationContext.packageName.toString() + ".provider",
+            file
+        )
+        val shareIntent = ShareCompat.IntentBuilder.from(this@MainActivity)
+            .setText("Share png")
+            .setType("image/png")
+            .setStream(savedUri)
+            .intent
+            .setPackage("com.google.android.apps.docs")
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(shareIntent)
+
+    }
+
+
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -180,14 +238,6 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.checkSelfPermission(
             baseContext, it
         ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun getOutputDirectory(): File {
-        val mediaDir = externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else filesDir
     }
 
     override fun onDestroy() {
