@@ -1,6 +1,7 @@
 package homelab.onlytake
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -22,6 +24,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
 import homelab.onlytake.file.*
@@ -33,6 +36,7 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.min
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
-    val recognizer = TextRecognition.getClient()
+    val recognizer = TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
 
     private var imageCapture: ImageCapture? = null
 
@@ -135,46 +139,56 @@ class MainActivity : AppCompatActivity() {
                     recognizer.process(image)
                         .addOnSuccessListener { visionText ->
                             // Task completed successfully
+                            val yens = mutableListOf<Int>()
+                            val mayYens = mutableListOf<Int>()
                             var useText = ""
                             var height = 0
                             for (block in visionText.textBlocks) {
-                                val blockText = block.text
-                                val blockCornerPoints = block.cornerPoints
-                                val blockFrame = block.boundingBox
                                 for (line in block.lines) {
                                     val lineText = line.text
-                                    val lineCornerPoints = line.cornerPoints
-                                    val lineFrame = line.boundingBox
                                     Log.d("recog text lineText", lineText)
-                                    if (height < lineFrame?.height() ?: 0) {
-                                        var curResult = ""
-                                        lineText.forEach {
-                                            if (it.isDigit()) curResult += it
-                                        }
-                                        if (curResult.isEmpty()) continue
-                                        height = lineFrame!!.height()
-                                        useText = lineText
+                                    Log.d("recog text getYen", getYen(lineText).toString())
+                                    if (lineText.contains("円") || lineText.contains("¥")) {
+                                        yens.add(getYen(lineText))
+                                        continue
                                     }
-                                    for (element in line.elements) {
-                                        val elementText = element.text
-                                        val elementCornerPoints = element.cornerPoints
-                                        val elementFrame = element.boundingBox
+                                    if (getYen(lineText) != 0) {
+                                        mayYens.add(getYen(lineText))
                                     }
                                 }
                             }
-                            var result = ""
-                            useText.forEach {
-                                if (it.isDigit()) result += it
-                            }
-                            var file = photoFile
-                            when(getOcrSetting()) {
-                                OcrSetting.PREFIX -> file = photoFile.addPrefix(result)
-                                OcrSetting.SUFFIX -> file = photoFile.addSuffix(result)
-                                OcrSetting.NONE -> {}
-                            }
-                            shareGoogleDrive(file)
-                            Log.d("recog text useText", result)
-                            // ...
+                            yens.sortDescending()
+                            mayYens.sortDescending()
+                            val res = mutableListOf<String>().apply {
+                                addAll(yens.slice(0..min(2, yens.size - 1))
+                                    .map {
+                                        it.toString()
+                                    })
+                                addAll(mayYens.slice(0..min(2, mayYens.size - 1))
+                                    .map {
+                                        it.toString()
+                                    })
+                                add("None")
+                            }.toTypedArray()
+                            AlertDialog.Builder(this@MainActivity)
+                                .setTitle("select total amount")
+                                .setItems(
+                                    res
+                                ) { _, which ->
+                                    var file = photoFile
+                                    val result = res[which]
+                                    if (result == "None") {
+                                        shareGoogleDrive(file)
+                                        return@setItems
+                                    }
+                                    when (getOcrSetting()) {
+                                        OcrSetting.PREFIX -> file = photoFile.addPrefix(result)
+                                        OcrSetting.SUFFIX -> file = photoFile.addSuffix(result)
+                                        OcrSetting.NONE -> {}
+                                    }
+                                    shareGoogleDrive(file)
+                                    Log.d("recog text useText", result)
+                                }.create().show()
                         }
                         .addOnFailureListener { e ->
                             shareGoogleDrive(photoFile)
@@ -185,6 +199,20 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, msg)
                 }
             })
+    }
+
+    private fun getYen(text: String): Int {
+        var result = ""
+        text.forEach {
+            if (it.isDigit()) result += it
+            if (result.length > 8) return 0
+        }
+        var resInt = 0
+        if (result.isEmpty()) return resInt
+        if (result.toInt() in 101..999999) {
+            resInt = result.toInt()
+        }
+        return resInt
     }
 
     private fun shareGoogleDrive(file: File) {
@@ -207,11 +235,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
-        cameraProviderFuture.addListener(Runnable {
+        cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
@@ -259,6 +286,7 @@ class MainActivity : AppCompatActivity() {
         requestCode: Int, permissions: Array<String>, grantResults:
         IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 startCamera()
