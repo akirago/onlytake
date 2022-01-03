@@ -66,6 +66,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="2020-12-31-23" />
+
+                <RadioButton
+                    android:id="@+id/format_radio_button_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="2020-12-31" />
             </RadioGroup>
 
             <com.google.android.material.textview.MaterialTextView

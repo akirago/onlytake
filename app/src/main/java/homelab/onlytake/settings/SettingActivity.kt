@@ -27,6 +27,7 @@ class SettingActivity : AppCompatActivity() {
             FILE_FORMATS.FILE_FORMAT_SEC -> format_radio_button_sec
             FILE_FORMATS.FILE_FORMAT_MIN -> format_radio_button_min
             FILE_FORMATS.FILE_FORMAT_HOUR -> format_radio_button_hour
+            FILE_FORMATS.FILE_FORMAT_DAY -> format_radio_button_day
         }.isChecked = true
 
         when (getOcrSetting()) {
@@ -44,6 +45,7 @@ class SettingActivity : AppCompatActivity() {
                 format_radio_button_sec.id -> setFormat(FILE_FORMATS.FILE_FORMAT_SEC)
                 format_radio_button_min.id -> setFormat(FILE_FORMATS.FILE_FORMAT_MIN)
                 format_radio_button_hour.id -> setFormat(FILE_FORMATS.FILE_FORMAT_HOUR)
+                format_radio_button_day.id -> setFormat(FILE_FORMATS.FILE_FORMAT_DAY)
             }
         }
 

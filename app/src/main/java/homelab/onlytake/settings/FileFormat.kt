@@ -11,6 +11,7 @@ enum class FILE_FORMATS(val format: String) {
     FILE_FORMAT_SEC("yyyy-MM-dd-HH-mm-ss"),
     FILE_FORMAT_MIN("yyyy-MM-dd-HH-mm"),
     FILE_FORMAT_HOUR("yyyy-MM-dd-HH"),
+    FILE_FORMAT_DAY("yyyy-MM-dd"),
 }
 
 // for LOCALE
@@ -33,6 +34,7 @@ private val fileMap = mapOf(
     FILE_FORMAT_SEC.format to FILE_FORMAT_SEC,
     FILE_FORMAT_MIN.format to FILE_FORMAT_MIN,
     FILE_FORMAT_HOUR.format to FILE_FORMAT_HOUR,
+    FILE_FORMAT_DAY.format to FILE_FORMAT_DAY,
 )
 
 fun getLocaleFromKey(key: String?): LOCALES = localeMap[key] ?: US

@@ -1,7 +1,6 @@
 package homelab.onlytake
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -138,11 +137,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     recognizer.process(image)
                         .addOnSuccessListener { visionText ->
-                            // Task completed successfully
                             val yens = mutableListOf<Int>()
                             val mayYens = mutableListOf<Int>()
-                            var useText = ""
-                            var height = 0
                             for (block in visionText.textBlocks) {
                                 for (line in block.lines) {
                                     val lineText = line.text
@@ -160,6 +156,7 @@ class MainActivity : AppCompatActivity() {
                             yens.sortDescending()
                             mayYens.sortDescending()
                             val res = mutableListOf<String>().apply {
+                                // 高い金額と思われるものを上から三つずつ提案する
                                 addAll(yens.slice(0..min(2, yens.size - 1))
                                     .map {
                                         it.toString()
@@ -168,16 +165,19 @@ class MainActivity : AppCompatActivity() {
                                     .map {
                                         it.toString()
                                     })
-                                add("None")
+                                add("Excluding the above")
                             }.toTypedArray()
                             AlertDialog.Builder(this@MainActivity)
                                 .setTitle("select total amount")
+                                .setOnDismissListener {
+                                    progress_bar.isGone = true
+                                }
                                 .setItems(
                                     res
                                 ) { _, which ->
                                     var file = photoFile
                                     val result = res[which]
-                                    if (result == "None") {
+                                    if (result == "Excluding the above") {
                                         shareGoogleDrive(file)
                                         return@setItems
                                     }
@@ -188,14 +188,14 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     shareGoogleDrive(file)
                                     Log.d("recog text useText", result)
-                                }.create().show()
+                                }.create()
+                                .show()
                         }
                         .addOnFailureListener { e ->
                             shareGoogleDrive(photoFile)
                         }
 
                     val msg = "Photo capture succeeded: $savedUri"
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
                 }
             })
