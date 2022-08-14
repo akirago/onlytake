@@ -145,11 +145,15 @@ class MainActivity : AppCompatActivity() {
                                     Log.d("recog text lineText", lineText)
                                     Log.d("recog text getYen", getYen(lineText).toString())
                                     if (lineText.contains("円") || lineText.contains("¥")) {
-                                        yens.add(getYen(lineText))
+                                        if (!yens.contains(getYen(lineText))) {
+                                            yens.add(getYen(lineText))
+                                        }
                                         continue
                                     }
                                     if (getYen(lineText) != 0) {
-                                        mayYens.add(getYen(lineText))
+                                        if (!mayYens.contains(getYen(lineText))) {
+                                            mayYens.add(getYen(lineText))
+                                        }
                                     }
                                 }
                             }
