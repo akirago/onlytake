@@ -174,29 +174,7 @@ class MainActivity : AppCompatActivity() {
                                     })
                                 add("Excluding the above")
                             }.toTypedArray()
-                            AlertDialog.Builder(this@MainActivity)
-                                .setTitle("select total amount")
-                                .setOnDismissListener {
-                                    binding.progressBar.isGone = true
-                                }
-                                .setItems(
-                                    res
-                                ) { _, which ->
-                                    var file = photoFile
-                                    val result = res[which]
-                                    if (result == "Excluding the above") {
-                                        shareGoogleDrive(file)
-                                        return@setItems
-                                    }
-                                    when (getOcrSetting()) {
-                                        OcrSetting.PREFIX -> file = photoFile.addPrefix(result)
-                                        OcrSetting.SUFFIX -> file = photoFile.addSuffix(result)
-                                        OcrSetting.NONE -> {}
-                                    }
-                                    shareGoogleDrive(file)
-                                    Log.d("recog text useText", result)
-                                }.create()
-                                .show()
+                            showAmountDialog(res, photoFile)
                         }
                         .addOnFailureListener { e ->
                             shareGoogleDrive(photoFile)
@@ -206,6 +184,59 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, msg)
                 }
             })
+    }
+
+    private fun showAmountDialog(res: Array<String>, photoFile: File) {
+        AlertDialog.Builder(this@MainActivity)
+            .setTitle("select total amount")
+            .setOnDismissListener {
+                binding.progressBar.isGone = true
+            }
+            .setItems(
+                res
+            ) { _, which ->
+                var file = photoFile
+                val result = res[which]
+                if (result == "Excluding the above") {
+                    shareGoogleDrive(file)
+                    return@setItems
+                }
+                when (getOcrSetting()) {
+                    OcrSetting.PREFIX -> file = photoFile.addPrefix(result)
+                    OcrSetting.SUFFIX -> file = photoFile.addSuffix(result)
+                    OcrSetting.NONE -> {}
+                }
+                showItemDialog(file)
+                Log.d("recog text useText", result)
+            }.create()
+            .show()
+    }
+
+    private fun showItemDialog(photoFile: File) {
+        val res = arrayOf(
+            "kaigi",
+            "kousai",
+            "koutuuhi",
+            "iryou",
+        )
+        AlertDialog.Builder(this@MainActivity)
+            .setTitle("select item")
+            .setOnDismissListener {
+                binding.progressBar.isGone = true
+            }
+            .setItems(
+                res
+            ) { _, which ->
+                var file = photoFile
+                val result = res[which]
+                when (getOcrSetting()) {
+                    OcrSetting.PREFIX -> file = photoFile.addPrefix(result)
+                    OcrSetting.SUFFIX -> file = photoFile.addSuffix(result)
+                    OcrSetting.NONE -> {}
+                }
+                shareGoogleDrive(file)
+            }.create()
+            .show()
     }
 
     private fun getYen(text: String): Int {
