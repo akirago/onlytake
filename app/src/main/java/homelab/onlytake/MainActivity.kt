@@ -26,11 +26,11 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
+import homelab.onlytake.databinding.ActivityMainBinding
 import homelab.onlytake.file.*
 import homelab.onlytake.settings.OcrSetting
 import homelab.onlytake.settings.SettingActivity
 import homelab.onlytake.settings.getOcrSetting
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutorService
@@ -52,12 +52,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var cameraExecutor: ExecutorService
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initAdvertise(this)
-        activateView(ad_view)
+        activateView(binding.adView)
 
 
         // Request camera permissions
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set up the listener for take photo button
-        camera_capture_button.setOnClickListener {
+        binding.cameraCaptureButton.setOnClickListener {
             takePhoto()
         }
 
@@ -98,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {   // Get a stable reference of the modifiable image capture use case
-        progress_bar.isVisible = true
+        binding.progressBar.isVisible = true
         val imageCapture = imageCapture ?: return
 
         // Create time-stamped output file to hold the image
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    progress_bar.isGone = true
+                    binding.progressBar.isGone = true
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
@@ -174,7 +177,7 @@ class MainActivity : AppCompatActivity() {
                             AlertDialog.Builder(this@MainActivity)
                                 .setTitle("select total amount")
                                 .setOnDismissListener {
-                                    progress_bar.isGone = true
+                                    binding.progressBar.isGone = true
                                 }
                                 .setItems(
                                     res
@@ -220,7 +223,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shareGoogleDrive(file: File) {
-        progress_bar.isGone = true
+        binding.progressBar.isGone = true
 
         val savedUri = FileProvider.getUriForFile(
             this@MainActivity,
@@ -250,7 +253,7 @@ class MainActivity : AppCompatActivity() {
             val preview = Preview.Builder()
                 .build()
                 .also {
-                    it.setSurfaceProvider(viewFinder.surfaceProvider)
+                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
                 }
 
             imageCapture = ImageCapture.Builder()

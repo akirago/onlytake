@@ -9,66 +9,69 @@ import homelab.onlytake.BuildConfig
 import homelab.onlytake.R
 import homelab.onlytake.advertise.activateView
 import homelab.onlytake.advertise.initAdvertise
-import kotlinx.android.synthetic.main.activity_setting.*
+import homelab.onlytake.databinding.ActivitySettingBinding
 
 class SettingActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySettingBinding
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+        binding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initAdvertise(this)
-        activateView(ad_view_in_settings)
+        activateView(binding.adViewInSettings)
 
-        version_name.text = "app version: ${BuildConfig.VERSION_NAME}"
+        binding.versionName.text = "app version: ${BuildConfig.VERSION_NAME}"
 
         when (getFormat()) {
-            FILE_FORMATS.FILE_FORMAT_SEC -> format_radio_button_sec
-            FILE_FORMATS.FILE_FORMAT_MIN -> format_radio_button_min
-            FILE_FORMATS.FILE_FORMAT_HOUR -> format_radio_button_hour
-            FILE_FORMATS.FILE_FORMAT_DAY -> format_radio_button_day
+            FILE_FORMATS.FILE_FORMAT_SEC -> binding.formatRadioButtonSec
+            FILE_FORMATS.FILE_FORMAT_MIN -> binding.formatRadioButtonMin
+            FILE_FORMATS.FILE_FORMAT_HOUR -> binding.formatRadioButtonHour
+            FILE_FORMATS.FILE_FORMAT_DAY -> binding.formatRadioButtonDay
         }.isChecked = true
 
         when (getOcrSetting()) {
-            OcrSetting.PREFIX -> text_radio_button_PREFIX
-            OcrSetting.SUFFIX -> text_radio_button_SUFFIX
-            OcrSetting.NONE -> text_radio_button_NONE
+            OcrSetting.PREFIX -> binding.textRadioButtonPREFIX
+            OcrSetting.SUFFIX -> binding.textRadioButtonSUFFIX
+            OcrSetting.NONE -> binding.textRadioButtonNONE
         }.isChecked = true
 
-        prefix_edit_text.setText(getPrefixSetting())
-        suffix_edit_text.setText(getSuffixSetting())
+        binding.prefixEditText.setText(getPrefixSetting())
+        binding.suffixEditText.setText(getSuffixSetting())
 
-        format_radio_group.setOnCheckedChangeListener { _, checkedId ->
+        binding.formatRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             // Responds to child RadioButton checked/unchecked
             when (checkedId) {
-                format_radio_button_sec.id -> setFormat(FILE_FORMATS.FILE_FORMAT_SEC)
-                format_radio_button_min.id -> setFormat(FILE_FORMATS.FILE_FORMAT_MIN)
-                format_radio_button_hour.id -> setFormat(FILE_FORMATS.FILE_FORMAT_HOUR)
-                format_radio_button_day.id -> setFormat(FILE_FORMATS.FILE_FORMAT_DAY)
+                binding.formatRadioButtonSec.id -> setFormat(FILE_FORMATS.FILE_FORMAT_SEC)
+                binding.formatRadioButtonMin.id -> setFormat(FILE_FORMATS.FILE_FORMAT_MIN)
+                binding.formatRadioButtonHour.id -> setFormat(FILE_FORMATS.FILE_FORMAT_HOUR)
+                binding.formatRadioButtonDay.id -> setFormat(FILE_FORMATS.FILE_FORMAT_DAY)
             }
         }
 
-        text_recognize_radio_group.setOnCheckedChangeListener { _, checkId ->
+        binding.textRecognizeRadioGroup.setOnCheckedChangeListener { _, checkId ->
             when (checkId) {
-                text_radio_button_PREFIX.id -> setOcrSetting(OcrSetting.PREFIX)
-                text_radio_button_SUFFIX.id -> setOcrSetting(OcrSetting.SUFFIX)
-                text_radio_button_NONE.id -> setOcrSetting(OcrSetting.NONE)
+                binding.textRadioButtonPREFIX.id -> setOcrSetting(OcrSetting.PREFIX)
+                binding.textRadioButtonSUFFIX.id -> setOcrSetting(OcrSetting.SUFFIX)
+                binding.textRadioButtonNONE.id -> setOcrSetting(OcrSetting.NONE)
             }
         }
 
-        prefix_edit_text.doOnTextChanged { text, _, _, _ ->
+        binding.prefixEditText.doOnTextChanged { text, _, _, _ ->
             setPrefixSetting(text.toString())
         }
 
-        suffix_edit_text.doOnTextChanged { text, _, _, _ ->
+        binding.suffixEditText.doOnTextChanged { text, _, _, _ ->
             setSuffixSetting(text.toString())
         }
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        save_button.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             finish()
         }
     }
