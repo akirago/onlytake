@@ -9,7 +9,7 @@ android {
     buildToolsVersion "35.0.0"
 
     defaultConfig {
-        applicationId "homelab.onlytake"
+        applicationId "homelab.coslist"
         minSdkVersion 23
         targetSdkVersion 35
         /**
