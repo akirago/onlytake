@@ -30,6 +30,10 @@
 
         <activity android:name=".settings.SettingActivity" />
 
+        <activity android:name=".photo.TakeClothesActivity" />
+
+        <activity android:name=".RegisterGenreActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

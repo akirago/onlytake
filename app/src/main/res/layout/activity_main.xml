@@ -76,4 +76,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recommendation_cos" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/register_genre_button"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ジャンルを登録する"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/secret_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

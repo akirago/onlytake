@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import homelab.onlytake.databinding.ActivityMainBinding
 import homelab.onlytake.list.CosplayListActivity
+import homelab.onlytake.photo.TakeClothesActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +21,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.registerCos.setOnClickListener {
-//            startActivity(Intent(this, ))
+            startActivity(Intent(this, TakeClothesActivity::class.java))
+        }
+
+        binding.registerGenreButton.setOnClickListener {
+            startActivity(Intent(this, RegisterGenreActivity::class.java))
         }
     }
 }
