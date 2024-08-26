@@ -1,5 +1,6 @@
 package homelab.onlytake
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +15,9 @@ import homelab.onlytake.database.Genre
 import homelab.onlytake.databinding.ActivityRegisterGenreBinding
 import homelab.onlytake.databinding.ViewholderRegisterResultBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterGenreActivity : AppCompatActivity() {
 
@@ -36,18 +39,20 @@ class RegisterGenreActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val db = Room.databaseBuilder(
-                    applicationContext,
-                    AppDatabase::class.java, "app_database"
-                ).build()
-                val genres = db.genreDao().getAllGenres()
-                runOnUiThread {
-                    binding.genreList.adapter = GenreAdapter(genres)
-                    binding.genreList.layoutManager =
-                        LinearLayoutManager(this@RegisterGenreActivity)
-                }
+        showGenre()
+    }
+
+    private fun showGenre() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val db = Room.databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java, "app_database"
+            ).build()
+            val genres = db.genreDao().getAllGenres()
+            runOnUiThread {
+                binding.genreList.adapter = GenreAdapter(genres)
+                binding.genreList.layoutManager =
+                    LinearLayoutManager(this@RegisterGenreActivity)
             }
         }
     }
@@ -55,12 +60,13 @@ class RegisterGenreActivity : AppCompatActivity() {
     private fun saveGenreToDatabase(genreName: String) {
         val genre = Genre(id = 0, name = genreName)
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val db = Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java, "app_database"
             ).build()
             db.genreDao().insert(genre)
+            val genres = db.genreDao().getAllGenres()
             runOnUiThread {
                 Toast.makeText(
                     this@RegisterGenreActivity,
@@ -68,13 +74,20 @@ class RegisterGenreActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
                 binding.etGenreName.text.clear()
+                (binding.genreList.adapter as GenreAdapter).updateGenres(genres)
             }
         }
     }
 }
 
-class GenreAdapter(private val itemList: List<Genre>) :
+class GenreAdapter(private var itemList: List<Genre>) :
     RecyclerView.Adapter<GenreAdapter.GenreViewHolder>() {
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateGenres(newGenres: List<Genre>) {
+        itemList = newGenres
+        notifyDataSetChanged()
+    }
 
 
     class GenreViewHolder(val binding: ViewholderRegisterResultBinding) :
@@ -92,5 +105,18 @@ class GenreAdapter(private val itemList: List<Genre>) :
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
         val item = itemList[position]
         holder.binding.genreName.text = item.name
+        holder.binding.genreDeleteButton.setOnClickListener {
+            GlobalScope.launch {
+                val db = Room.databaseBuilder(
+                    holder.binding.root.context,
+                    AppDatabase::class.java, "app_database"
+                ).build()
+                db.genreDao().delete(item)
+                val genres = db.genreDao().getAllGenres()
+                withContext(Dispatchers.Main) {
+                    updateGenres(genres)
+                }
+            }
+        }
     }
 }
