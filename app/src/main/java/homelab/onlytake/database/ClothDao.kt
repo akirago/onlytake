@@ -9,6 +9,6 @@ interface ClothDao {
     @Insert
     suspend fun insert(cloth: Cloth)
 
-    @Query("SELECT * FROM cloth")
-    fun getAllClothes(): List<Cloth>
+//    @Query("SELECT * FROM cloth WHERE genre_id = :genre")
+//    fun getClothes(genre: Genre): List<Cloth>
 }

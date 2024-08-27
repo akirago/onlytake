@@ -24,15 +24,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".list.CosplayListActivity" />
+        <activity android:name=".cloth.list.CosplayListActivity" />
 
         <activity android:name=".photo.TakePhotoActivity" />
 
         <activity android:name=".settings.SettingActivity" />
 
-        <activity android:name=".photo.TakeClothesActivity" />
+        <activity android:name=".cloth.register.TakeClothesActivity" />
 
-        <activity android:name=".RegisterGenreActivity" />
+        <activity android:name=".genre.RegisterGenreActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

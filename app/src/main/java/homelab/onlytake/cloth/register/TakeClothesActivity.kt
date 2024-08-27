@@ -1,4 +1,4 @@
-package homelab.onlytake.photo
+package homelab.onlytake.cloth.register
 
 import android.Manifest
 import android.content.pm.PackageManager

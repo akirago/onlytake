@@ -1,4 +1,4 @@
-package homelab.onlytake.list
+package homelab.onlytake.cloth.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
