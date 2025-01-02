@@ -1,15 +1,19 @@
 package homelab.onlytake.cloth.list
 
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import homelab.onlytake.CustomApplication
 import homelab.onlytake.R
 import homelab.onlytake.databinding.ActivityCosplayListBinding
 
 class CosplayListActivity : AppCompatActivity() {
+
+    private val viewModel: CosplayListViewModel by viewModels {
+        CosplayListViewModelFactory((application as CustomApplication).cosplayListRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,36 +22,17 @@ class CosplayListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val mainRecyclerView: RecyclerView = findViewById(R.id.mainRecyclerView)
-
-        // Prepare the data
-        val headerListData = listOf(
-            HeaderListData(
-                header = "Category 1",
-                items = arrayListOf<CosplayData>(
-                    CosplayData(R.drawable.maid1, "1"),
-                    CosplayData(R.drawable.maid2, "1"),
-                    CosplayData(R.drawable.maid3,"1"),
-                    CosplayData(R.drawable.maid1, "1"),
-                    CosplayData(R.drawable.maid2, "1"),
-                    CosplayData(R.drawable.maid3, "1"),
-                )
-            ),
-            HeaderListData(
-                header = "Category 2",
-                items = arrayListOf<CosplayData>(
-                    CosplayData(R.drawable.uniform1, "未使用"),
-                    CosplayData(R.drawable.uniform2, "2"),
-                    CosplayData(R.drawable.uniform3, "1"),
-                    CosplayData(R.drawable.uniform1, "未使用"),
-                    CosplayData(R.drawable.uniform2, "2"),
-                    CosplayData(R.drawable.uniform3, "1"),
-                )
-            )
-        )
-
-        // Set up the main RecyclerView
-        mainRecyclerView.layoutManager = LinearLayoutManager(this)
-        mainRecyclerView.adapter = MainAdapter(headerListData)
+        viewModel.fetchHeaderListData { it ->
+            // Set up the main RecyclerView
+            mainRecyclerView.layoutManager = LinearLayoutManager(this)
+            println("testtest set")
+            mainRecyclerView.adapter = MainAdapter(it).apply {
+                setListener { cloth ->
+                    println("testtest ${cloth.id}")
+                    viewModel.deleteClothData(cloth.id)
+                }
+            }
+        }
     }
 }
 

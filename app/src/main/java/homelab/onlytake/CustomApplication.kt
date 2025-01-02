@@ -2,6 +2,7 @@ package homelab.onlytake
 
 import android.app.Application
 import android.content.Context
+import homelab.onlytake.cloth.list.CosplayListRepository
 import homelab.onlytake.cloth.register.TakeClothesRepository
 import homelab.onlytake.cloth.register.TakeClothesViewModelFactory
 import homelab.onlytake.database.AppDatabase
@@ -27,4 +28,5 @@ class CustomApplication : Application() {
     val clothRepository by lazy { RegisterGenreRepository(database.genreDao()) }
 
     val takeClothesRepository by lazy { TakeClothesRepository(database.genreDao()) }
+    val cosplayListRepository by lazy { CosplayListRepository(database.myDao()) }
 }

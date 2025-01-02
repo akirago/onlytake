@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import homelab.onlytake.R
+import homelab.onlytake.database.Cloth
 
 data class HeaderListData(
     val header: String,
@@ -12,14 +13,22 @@ data class HeaderListData(
 )
 
 
-class MainAdapter(private val data: List<HeaderListData>) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+class MainAdapter(private val data: List<HeaderListData>) :
+    RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val headerListView: HeaderListView = view.findViewById(R.id.headerListView)
     }
 
+    private var listener: (CosplayData) -> Unit = {}
+
+    fun setListener(doEvent: (CosplayData) -> Unit) {
+        listener = doEvent
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.header_item_list, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.header_item_list, parent, false)
         return MainViewHolder(view)
     }
 
@@ -29,6 +38,7 @@ class MainAdapter(private val data: List<HeaderListData>) : RecyclerView.Adapter
         // Set the header and list data for the HeaderListView
         holder.headerListView.setHeader(headerListData.header)
         holder.headerListView.setListData(headerListData.items)
+        holder.headerListView.setListener(listener)
     }
 
     override fun getItemCount(): Int = data.size

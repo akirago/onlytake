@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 abstract class AppDatabase : RoomDatabase() {
     abstract fun genreDao(): GenreDao
     abstract fun clothDao(): ClothDao
+    abstract fun myDao(): MyDao
 
     companion object {
         @Volatile

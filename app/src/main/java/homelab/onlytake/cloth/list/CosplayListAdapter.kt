@@ -1,26 +1,56 @@
 package homelab.onlytake.cloth.list
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.camera.core.processing.SurfaceProcessorNode.In
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import homelab.onlytake.CustomApplication
+import homelab.onlytake.CustomApplication.Companion.context
+import homelab.onlytake.R
 import homelab.onlytake.databinding.ViewholderCosplayListBinding
 
 
-data class CosplayData(val resId: Int, val useNumber: String)
+data class CosplayData(val id: Int, val bitmap: Bitmap, val title: String)
 
-class CosplayListAdapter(private val itemList: List<CosplayData>) : RecyclerView.Adapter<CosplayListAdapter.CosplayViewHolder>() {
+class CosplayListAdapter(private val itemList: List<CosplayData>) :
+    RecyclerView.Adapter<CosplayListAdapter.CosplayViewHolder>() {
 
-    class CosplayViewHolder(val binding: ViewholderCosplayListBinding) : RecyclerView.ViewHolder(binding.root)
+    class CosplayViewHolder(val binding: ViewholderCosplayListBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CosplayViewHolder {
         val binding = ViewholderCosplayListBinding.inflate(LayoutInflater.from(parent.context))
         return CosplayViewHolder(binding)
     }
 
+
+    private var listener: (CosplayData) -> Unit = {}
+
+    fun setListener(doEvent: (CosplayData) -> Unit) {
+        listener = doEvent
+    }
+
     override fun onBindViewHolder(holder: CosplayViewHolder, position: Int) {
         val item = itemList[position]
-        holder.binding.imageView.setImageResource(item.resId)
-        holder.binding.useTime.text = item.useNumber.toString()
+        holder.binding.imageView.setImageBitmap(item.bitmap)
+        holder.binding.title.text = item.title
+        holder.binding.root.setOnClickListener {
+            AlertDialog.Builder(holder.binding.root.context)
+                .setTitle("消去しますか")
+                .setNegativeButton("しない") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton("消去する") { dialog, which ->
+                    println("testtest syoukyo")
+                    listener(item)
+                    dialog.dismiss()
+                }
+                .show()
+        }
     }
 
     override fun getItemCount() = itemList.size

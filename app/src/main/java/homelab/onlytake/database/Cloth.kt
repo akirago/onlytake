@@ -1,6 +1,5 @@
 package homelab.onlytake.database
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -21,5 +20,5 @@ data class Cloth(
     val type: String,
     val used_count: Int,
     val genre_id: Int,
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) val picture: ByteArray
+    val picturePath: String // Change from BLOB to String
 )

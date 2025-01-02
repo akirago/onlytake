@@ -1,6 +1,7 @@
 package homelab.onlytake.cloth.register
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -37,6 +38,7 @@ import homelab.onlytake.genre.RegisterGenreViewModelFactory
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -127,7 +129,8 @@ class TakeClothesActivity : AppCompatActivity() {
 
     fun correctBitmapOrientation(filePath: String, bitmap: Bitmap): Bitmap {
         val exif = ExifInterface(filePath)
-        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        val orientation =
+            exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
 
         val matrix = Matrix()
         when (orientation) {
@@ -166,7 +169,11 @@ class TakeClothesActivity : AppCompatActivity() {
 
         binding.registerClothButton.setOnClickListener {
             lifecycleScope.launch {
-                val byteArray = bitmapToByteArray(bitmap)
+                val path = saveImageToStorage(
+                    this@TakeClothesActivity,
+                    bitmap,
+                    System.currentTimeMillis().toString()
+                )
                 val cloth = Cloth(
                     id = 0,
                     name = binding.inputTitle.text.toString(),
@@ -174,7 +181,7 @@ class TakeClothesActivity : AppCompatActivity() {
                     type = "Sample Type",
                     used_count = 0,
                     genre_id = selectedGenre.id,
-                    picture = byteArray
+                    picturePath = path,
                 )
 
                 val db = Room.databaseBuilder(
@@ -186,6 +193,14 @@ class TakeClothesActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    private fun saveImageToStorage(context: Context, bitmap: Bitmap, fileName: String): String {
+        val file = File(context.filesDir, fileName) // App-specific directory
+        FileOutputStream(file).use { outputStream ->
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        }
+        return file.absolutePath // Return the path to store in the database
     }
 
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
