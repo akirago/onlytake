@@ -1,0 +1,12 @@
+<!-- res/layout/item_header_list.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- The Custom HeaderListView -->
+    <homelab.onlytake.cloth.list.HeaderListView
+        android:id="@+id/headerListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

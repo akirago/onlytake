@@ -5,50 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/my_app_background">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/maid_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:fontFamily="serif"
-        android:text="メイド"
-        android:textColor="@color/teal_200"
-        android:textSize="45dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/maid_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/maid_title" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/uniform_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:fontFamily="serif"
-        android:text="制服"
-        android:textColor="@color/teal_200"
-        android:textSize="45dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/maid_recycler_view" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/uniform_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/uniform_title" />
+        android:id="@+id/mainRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

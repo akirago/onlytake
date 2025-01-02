@@ -103,7 +103,6 @@ class TakeClothesActivity : AppCompatActivity() {
         val photoFile = createFile(application.filesDir, FILENAME, PHOTO_EXTENSION)
 
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-//        showResultContainer()
 
         imageCapture.takePicture(
             outputOptions,
@@ -111,7 +110,6 @@ class TakeClothesActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-//                    showResultContainer()
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
