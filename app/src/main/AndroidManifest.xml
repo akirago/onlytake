@@ -26,8 +26,6 @@
 
         <activity android:name=".cloth.list.CosplayListActivity" />
 
-        <activity android:name=".photo.TakePhotoActivity" />
-
         <activity android:name=".settings.SettingActivity" />
 
         <activity android:name=".cloth.register.TakeClothesActivity" />

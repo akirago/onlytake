@@ -2,6 +2,8 @@ package homelab.onlytake
 
 import android.app.Application
 import android.content.Context
+import homelab.onlytake.cloth.register.TakeClothesRepository
+import homelab.onlytake.cloth.register.TakeClothesViewModelFactory
 import homelab.onlytake.database.AppDatabase
 import homelab.onlytake.genre.RegisterGenreRepository
 import kotlinx.coroutines.CoroutineScope
@@ -23,4 +25,6 @@ class CustomApplication : Application() {
     val database by lazy { AppDatabase.getDatabase(context, applicationScope) }
     val registerGenreRepository by lazy { RegisterGenreRepository(database.genreDao()) }
     val clothRepository by lazy { RegisterGenreRepository(database.genreDao()) }
+
+    val takeClothesRepository by lazy { TakeClothesRepository(database.genreDao()) }
 }

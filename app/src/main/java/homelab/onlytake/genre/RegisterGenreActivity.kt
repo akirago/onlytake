@@ -55,6 +55,7 @@ class RegisterGenreActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             genreViewModel.addGenre(genre)
+            binding.etGenreName.text.clear()
         }
     }
 }
