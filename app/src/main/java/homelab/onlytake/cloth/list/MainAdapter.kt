@@ -13,17 +13,11 @@ data class HeaderListData(
 )
 
 
-class MainAdapter(private val data: List<HeaderListData>) :
+class MainAdapter(private val data: List<HeaderListData>, private val listener: (CosplayData) -> Unit) :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
 
     inner class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val headerListView: HeaderListView = view.findViewById(R.id.headerListView)
-    }
-
-    private var listener: (CosplayData) -> Unit = {}
-
-    fun setListener(doEvent: (CosplayData) -> Unit) {
-        listener = doEvent
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -37,8 +31,7 @@ class MainAdapter(private val data: List<HeaderListData>) :
 
         // Set the header and list data for the HeaderListView
         holder.headerListView.setHeader(headerListData.header)
-        holder.headerListView.setListData(headerListData.items)
-        holder.headerListView.setListener(listener)
+        holder.headerListView.setListData(headerListData.items, listener)
     }
 
     override fun getItemCount(): Int = data.size

@@ -16,7 +16,7 @@ import homelab.onlytake.databinding.ViewholderCosplayListBinding
 
 data class CosplayData(val id: Int, val bitmap: Bitmap, val title: String)
 
-class CosplayListAdapter(private val itemList: List<CosplayData>) :
+class CosplayListAdapter(private val itemList: List<CosplayData>, private val listener: (CosplayData) -> Unit) :
     RecyclerView.Adapter<CosplayListAdapter.CosplayViewHolder>() {
 
     class CosplayViewHolder(val binding: ViewholderCosplayListBinding) :
@@ -25,13 +25,6 @@ class CosplayListAdapter(private val itemList: List<CosplayData>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CosplayViewHolder {
         val binding = ViewholderCosplayListBinding.inflate(LayoutInflater.from(parent.context))
         return CosplayViewHolder(binding)
-    }
-
-
-    private var listener: (CosplayData) -> Unit = {}
-
-    fun setListener(doEvent: (CosplayData) -> Unit) {
-        listener = doEvent
     }
 
     override fun onBindViewHolder(holder: CosplayViewHolder, position: Int) {
@@ -45,7 +38,6 @@ class CosplayListAdapter(private val itemList: List<CosplayData>) :
                     dialog.dismiss()
                 }
                 .setPositiveButton("消去する") { dialog, which ->
-                    println("testtest syoukyo")
                     listener(item)
                     dialog.dismiss()
                 }

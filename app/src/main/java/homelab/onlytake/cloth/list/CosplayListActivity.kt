@@ -22,15 +22,12 @@ class CosplayListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val mainRecyclerView: RecyclerView = findViewById(R.id.mainRecyclerView)
-        viewModel.fetchHeaderListData { it ->
+        viewModel.fetchHeaderListData {
             // Set up the main RecyclerView
             mainRecyclerView.layoutManager = LinearLayoutManager(this)
-            println("testtest set")
-            mainRecyclerView.adapter = MainAdapter(it).apply {
-                setListener { cloth ->
-                    println("testtest ${cloth.id}")
-                    viewModel.deleteClothData(cloth.id)
-                }
+            mainRecyclerView.adapter = MainAdapter(it) { cloth ->
+                println("testtest ${cloth.id}")
+                viewModel.deleteClothData(cloth.id)
             }
         }
     }

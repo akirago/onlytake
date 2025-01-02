@@ -39,16 +39,8 @@ class HeaderListView @JvmOverloads constructor(
     }
 
     // Method to set the list data
-    fun setListData(items: List<CosplayData>) {
-        recyclerView.adapter = CosplayListAdapter(items).apply {
-            setListener(listener)
-        }
-    }
-
-    private var listener: (CosplayData) -> Unit = {}
-
-    fun setListener(doEvent: (CosplayData) -> Unit) {
-        listener = doEvent
+    fun setListData(items: List<CosplayData>, listener: (CosplayData) -> Unit) {
+        recyclerView.adapter = CosplayListAdapter(items, listener)
     }
 }
 
