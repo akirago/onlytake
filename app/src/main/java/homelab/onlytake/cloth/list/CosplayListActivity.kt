@@ -26,7 +26,6 @@ class CosplayListActivity : AppCompatActivity() {
             // Set up the main RecyclerView
             mainRecyclerView.layoutManager = LinearLayoutManager(this)
             mainRecyclerView.adapter = MainAdapter(it) { cloth ->
-                println("testtest ${cloth.id}")
                 viewModel.deleteClothData(cloth.id)
             }
         }
